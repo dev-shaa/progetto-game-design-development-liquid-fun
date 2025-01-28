@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
-*
-* This software is provided 'as-is', without any express or implied
-* warranty.  In no event will the authors be held liable for any damages
-* arising from the use of this software.
-* Permission is granted to anyone to use this software for any purpose,
-* including commercial applications, and to alter it and redistribute it
-* freely, subject to the following restrictions:
-* 1. The origin of this software must not be misrepresented; you must not
-* claim that you wrote the original software. If you use this software
-* in a product, an acknowledgment in the product documentation would be
-* appreciated but is not required.
-* 2. Altered source versions must be plainly marked as such, and must not be
-* misrepresented as being the original software.
-* 3. This notice may not be removed or altered from any source distribution.
-*/
+ * Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
 
 #include <Box2D/Dynamics/Joints/b2MouseJoint.h>
 #include <Box2D/Dynamics/b2Body.h>
@@ -28,8 +28,8 @@
 // Identity used:
 // w k % (rx i + ry j) = w * (-ry i + rx j)
 
-b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def)
-: b2Joint(def)
+b2MouseJoint::b2MouseJoint(const b2MouseJointDef *def)
+	: b2Joint(def)
 {
 	b2Assert(def->target.IsValid());
 	b2Assert(b2IsValid(def->maxForce) && def->maxForce >= 0.0f);
@@ -49,7 +49,18 @@ b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def)
 	m_gamma = 0.0f;
 }
 
-void b2MouseJoint::SetTarget(const b2Vec2& target)
+#if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+/// Set position with direct floats.
+void b2MouseJoint::SetTarget(float32 x, float32 y)
+{
+	if (m_bodyB->IsAwake() == false)
+		m_bodyB->SetAwake(true);
+
+	m_targetA.Set(x, y);
+}
+#endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
+
+void b2MouseJoint::SetTarget(const b2Vec2 &target)
 {
 	if (m_bodyB->IsAwake() == false)
 	{
@@ -58,7 +69,12 @@ void b2MouseJoint::SetTarget(const b2Vec2& target)
 	m_targetA = target;
 }
 
-const b2Vec2& b2MouseJoint::GetTarget() const
+// #if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+// /// Set position with direct floats.
+
+// #endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
+
+const b2Vec2 &b2MouseJoint::GetTarget() const
 {
 	return m_targetA;
 }
@@ -93,7 +109,7 @@ float32 b2MouseJoint::GetDampingRatio() const
 	return m_dampingRatio;
 }
 
-void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
+void b2MouseJoint::InitVelocityConstraints(const b2SolverData &data)
 {
 	m_indexB = m_bodyB->m_islandIndex;
 	m_localCenterB = m_bodyB->m_sweep.localCenter;
@@ -165,7 +181,7 @@ void b2MouseJoint::InitVelocityConstraints(const b2SolverData& data)
 	data.velocities[m_indexB].w = wB;
 }
 
-void b2MouseJoint::SolveVelocityConstraints(const b2SolverData& data)
+void b2MouseJoint::SolveVelocityConstraints(const b2SolverData &data)
 {
 	b2Vec2 vB = data.velocities[m_indexB].v;
 	float32 wB = data.velocities[m_indexB].w;
@@ -190,7 +206,7 @@ void b2MouseJoint::SolveVelocityConstraints(const b2SolverData& data)
 	data.velocities[m_indexB].w = wB;
 }
 
-bool b2MouseJoint::SolvePositionConstraints(const b2SolverData& data)
+bool b2MouseJoint::SolvePositionConstraints(const b2SolverData &data)
 {
 	B2_NOT_USED(data);
 	return true;
@@ -216,7 +232,7 @@ float32 b2MouseJoint::GetReactionTorque(float32 inv_dt) const
 	return inv_dt * 0.0f;
 }
 
-void b2MouseJoint::ShiftOrigin(const b2Vec2& newOrigin)
+void b2MouseJoint::ShiftOrigin(const b2Vec2 &newOrigin)
 {
 	m_targetA -= newOrigin;
 }

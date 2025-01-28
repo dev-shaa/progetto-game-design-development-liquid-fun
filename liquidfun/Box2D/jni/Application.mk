@@ -16,10 +16,10 @@
 
 LOCAL_PATH:=$(call my-dir)
 
-APP_PLATFORM:=android-10
+APP_PLATFORM:=android-29
 APP_ABI:=armeabi-v7a
-APP_STL:=gnustl_static
+APP_STL:=c++_static
 APP_MODULES:=\
 	libliquidfun \
 	libliquidfun_static
-APP_CFLAGS+=-Wall -Werror -Wno-long-long -Wno-variadic-macros
+APP_CFLAGS+=-Wall -Wno-long-long -Wno-variadic-macros

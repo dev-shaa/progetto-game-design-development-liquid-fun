@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
-*
-* This software is provided 'as-is', without any express or implied
-* warranty.  In no event will the authors be held liable for any damages
-* arising from the use of this software.
-* Permission is granted to anyone to use this software for any purpose,
-* including commercial applications, and to alter it and redistribute it
-* freely, subject to the following restrictions:
-* 1. The origin of this software must not be misrepresented; you must not
-* claim that you wrote the original software. If you use this software
-* in a product, an acknowledgment in the product documentation would be
-* appreciated but is not required.
-* 2. Altered source versions must be plainly marked as such, and must not be
-* misrepresented as being the original software.
-* 3. This notice may not be removed or altered from any source distribution.
-*/
+ * Copyright (c) 2006-2007 Erin Catto http://www.box2d.org
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty.  In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
 
 #ifndef B2_DISTANCE_JOINT_H
 #define B2_DISTANCE_JOINT_H
@@ -41,8 +41,7 @@ struct b2DistanceJointDef : public b2JointDef
 
 	/// Initialize the bodies, anchors, and length using the world
 	/// anchors.
-	void Initialize(b2Body* bodyA, b2Body* bodyB,
-					const b2Vec2& anchorA, const b2Vec2& anchorB);
+	void Initialize(b2Body *bodyA, b2Body *bodyB, const b2Vec2 &anchorA, const b2Vec2 &anchorB);
 
 	/// The local anchor point relative to bodyA's origin.
 	b2Vec2 localAnchorA;
@@ -59,6 +58,14 @@ struct b2DistanceJointDef : public b2JointDef
 
 	/// The damping ratio. 0 = no damping, 1 = critical damping.
 	float32 dampingRatio;
+
+#if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+	/// Set position with direct floats.
+	void SetLocalAnchorA(float32 x, float32 y) { localAnchorA.Set(x, y); }
+
+	/// Set position with direct floats.
+	void SetLocalAnchorB(float32 x, float32 y) { localAnchorB.Set(x, y); }
+#endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
 };
 
 /// A distance joint constrains two points on two bodies
@@ -67,7 +74,6 @@ struct b2DistanceJointDef : public b2JointDef
 class b2DistanceJoint : public b2Joint
 {
 public:
-
 	b2Vec2 GetAnchorA() const;
 	b2Vec2 GetAnchorB() const;
 
@@ -80,10 +86,10 @@ public:
 	float32 GetReactionTorque(float32 inv_dt) const;
 
 	/// The local anchor point relative to bodyA's origin.
-	const b2Vec2& GetLocalAnchorA() const { return m_localAnchorA; }
+	const b2Vec2 &GetLocalAnchorA() const { return m_localAnchorA; }
 
 	/// The local anchor point relative to bodyB's origin.
-	const b2Vec2& GetLocalAnchorB() const  { return m_localAnchorB; }
+	const b2Vec2 &GetLocalAnchorB() const { return m_localAnchorB; }
 
 	/// Set/get the natural length.
 	/// Manipulating the length can lead to non-physical behavior when the frequency is zero.
@@ -102,13 +108,12 @@ public:
 	void Dump();
 
 protected:
-
 	friend class b2Joint;
-	b2DistanceJoint(const b2DistanceJointDef* data);
+	b2DistanceJoint(const b2DistanceJointDef *data);
 
-	void InitVelocityConstraints(const b2SolverData& data);
-	void SolveVelocityConstraints(const b2SolverData& data);
-	bool SolvePositionConstraints(const b2SolverData& data);
+	void InitVelocityConstraints(const b2SolverData &data);
+	void SolveVelocityConstraints(const b2SolverData &data);
+	bool SolvePositionConstraints(const b2SolverData &data);
 
 	float32 m_frequencyHz;
 	float32 m_dampingRatio;

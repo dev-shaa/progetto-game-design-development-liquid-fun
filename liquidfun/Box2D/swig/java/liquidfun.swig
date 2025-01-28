@@ -22,6 +22,16 @@
 #include "Box2D/Box2D.h"
 %}
 
+%typemap(jstype) void * "java.lang.Object";
+%apply jobject { void * };
+
+%typemap(in) void * { 
+  $1 = JCALL1(NewGlobalRef, jenv, $input);
+}
+
+%typemap(out) void * {
+  $result = (jobject)($1);
+}
 
 // allow const reference typemaps
 %naturalvar;
@@ -31,6 +41,7 @@ typedef float float32;
 typedef signed int int32;
 typedef unsigned int uint32;
 typedef unsigned char uint8;
+%typemap(jstype) void* "java.lang.Object"
 
 // rename class names to Java convention
 %rename("%(strip:[b2])s") "";
@@ -50,6 +61,7 @@ typedef unsigned char uint8;
 /// memory.
 /// Alas, there doesn't seem to be any wildcard symbols other than *, which
 /// doesn't work in this case (operator* maps to the * operator).
+
 %ignore operator=;
 %ignore operator*=;
 %ignore operator*;
@@ -70,14 +82,39 @@ typedef unsigned char uint8;
 %include "Collision/Shapes/b2EdgeShape.swig"
 %include "Collision/Shapes/b2PolygonShape.swig"
 
-%include "Common/b2Draw.swig"
+// %include "Common/b2Draw.swig"
 %include "Common/b2Math.swig"
 
 %include "Dynamics/b2Body.swig"
 %include "Dynamics/b2Fixture.swig"
 %include "Dynamics/b2World.swig"
 %include "Dynamics/b2WorldCallbacks.swig"
-
 %include "Particle/b2Particle.swig"
 %include "Particle/b2ParticleGroup.swig"
 %include "Particle/b2ParticleSystem.swig"
+
+%include Dynamics/b2ContactManager.swig
+
+%include Dynamics/Contacts/b2Contact.swig
+#%include Dynamics/Contacts/b2ContactSolver.swig
+
+%include Dynamics/b2QueryCallback.swig
+%include Dynamics/Joints/b2Joint.swig
+%include Dynamics/Joints/b2DistanceJoint.swig
+%include Dynamics/Joints/b2FrictionJoint.swig
+%include Dynamics/Joints/b2GearJoint.swig
+%include Dynamics/Joints/b2MotorJoint.swig
+%include Dynamics/Joints/b2MouseJoint.swig
+%include Dynamics/Joints/b2PrismaticJoint.swig
+%include Dynamics/Joints/b2PulleyJoint.swig
+%include Dynamics/Joints/b2RevoluteJoint.swig
+%include Dynamics/Joints/b2RopeJoint.swig
+%include Dynamics/Joints/b2WeldJoint.swig
+%include Dynamics/Joints/b2WheelJoint.swig
+
+// %include Dynamics/Contacts/b2ChainAndCircleContact.swig
+// %include Dynamics/Contacts/b2CircleContact.swig
+// %include Dynamics/Contacts/b2EdgeAndCircleContact.swig
+// %include Dynamics/Contacts/b2EdgeAndPolygonContact.swig
+// %include Dynamics/Contacts/b2PolygonAndCircleContact.swig
+// %include Dynamics/Contacts/b2PolygonContact.swig
